@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 400px; }
+    h1 { color: #333; margin-bottom: 20px; text-align: center; }
+    .btn-google { display: block; width: 100%; padding: 12px; background: #4285f4; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; text-align: center; margin-bottom: 20px; }
+    .btn-google:hover { background: #3367d6; }
+    hr { margin: 20px 0; border: none; border-top: 1px solid #ddd; }
+    input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+    button { width: 100%; padding: 10px; background: #34a853; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #2d8f47; }
+    .token-box { margin-top: 20px; padding: 10px; background: #e8f5e9; border-radius: 5px; word-break: break-all; display: none; font-size: 12px; }
+    .error { color: #d32f2f; margin-top: 10px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mi App</h1>
+    <a class="btn-google" href="https://s14-backend.onrender.com/api/auth/google">Iniciar sesión con Google</a>
+    <hr>
+    <h3 style="text-align:center;margin-bottom:15px;">O inicia sesión con email</h3>
+    <input type="email" id="email" placeholder="Email" value="maria@test.com">
+    <input type="password" id="password" placeholder="Password" value="pass123">
+    <button onclick="login()">Iniciar sesión</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="token-box" id="tokenBox">
+      <strong>Token JWT:</strong>
+      <p id="tokenValue" style="margin-top:5px;"></p>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      document.getElementById('tokenBox').style.display = 'block';
+      document.getElementById('tokenValue').textContent = token;
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.style.display = 'none';
+      try {
+        const res = await fetch('https://s14-backend.onrender.com/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          errorMsg.textContent = data.mensaje;
+          errorMsg.style.display = 'block';
+          return;
+        }
+        document.getElementById('tokenBox').style.display = 'block';
+        document.getElementById('tokenValue').textContent = data.token;
+      } catch (err) {
+        errorMsg.textContent = 'Error de conexión';
+        errorMsg.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
