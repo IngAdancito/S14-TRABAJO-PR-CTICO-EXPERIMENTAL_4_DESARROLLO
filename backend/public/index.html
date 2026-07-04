@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+    .container { text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { color: #333; }
+    .btn-google { display: inline-block; padding: 12px 24px; background: #4285f4; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; margin-top: 20px; }
+    .btn-google:hover { background: #3367d6; }
+    .token-box { margin-top: 20px; padding: 10px; background: #e8f5e9; border-radius: 5px; word-break: break-all; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bienvenido</h1>
+    <a class="btn-google" href="/api/auth/google">Iniciar sesión con Google</a>
+    <a class="btn-google" href="/api/login" style="background:#34a853;margin-top:10px;">Login JWT (Postman)</a>
+    <div class="token-box" id="tokenBox">
+      <strong>Token JWT:</strong>
+      <p id="tokenValue"></p>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      document.getElementById('tokenBox').style.display = 'block';
+      document.getElementById('tokenValue').textContent = token;
+    }
+  </script>
+</body>
+</html>
